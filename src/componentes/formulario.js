@@ -1,12 +1,32 @@
 import React, {useState} from "react";
 import styled from "styled-components";
+import db from "../firebase/firebaseConfi";
+import { collection, addDoc } from "firebase/firestore";
 
 const Formulario = () => {
     const [nombre, cambiarNombre] = useState('');
     const [correo, cambiarCorreo] = useState('');
 
+    const onSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            await addDoc(collection(db, 'usuarios'), {
+                nombre: nombre,
+                correo: correo
+            });
+        } catch(error) {
+            alert('Hubo un error al intentar guardar el documento');
+            console.log(error);
+        }
+        
+
+        cambiarCorreo('');
+        cambiarNombre('');
+    }
+
     return ( 
-        <form action="">
+        <form action="" onSubmit={onSubmit}>
             <Input
                 type="text"
                 name="nombre"
